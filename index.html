@@ -1,157 +1,104 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>NAOMI & SAM</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Naomi & Sam ❤️</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-      font-family: 'Segoe UI', sans-serif;
-    }
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      background: url('bg.jpg') center/cover no-repeat fixed;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-    }
+body {
+    height: 100vh;
+    background: url("bg.jpg") center/cover no-repeat;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
-    .overlay {
-      background: rgba(0,0,0,0.55);
-      backdrop-filter: blur(4px);
-      padding: 20px;
-      width: 90%;
-      max-width: 420px;
-      border-radius: 18px;
-      text-align: center;
-      animation: fadeIn 1s ease;
-    }
+.card {
+    background: rgba(0,0,0,0.55);
+    backdrop-filter: blur(10px);
+    padding: 25px;
+    border-radius: 20px;
+    text-align: center;
+    width: 90%;
+    max-width: 350px;
+    color: white;
+}
 
-    h2 {
-      margin-top: 0;
-      font-weight: 600;
-    }
+h1 {
+    margin-bottom: 10px;
+    letter-spacing: 2px;
+}
 
-    p {
-      line-height: 1.6;
-      font-size: 15px;
-    }
+p {
+    margin: 10px 0;
+    font-size: 15px;
+}
 
-    img {
-      max-width: 100%;
-      height: auto;
-      border-radius: 14px;
-      margin: 12px 0;
-    }
+button {
+    margin-top: 15px;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 25px;
+    background: #ff5fa2;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
 
-    button {
-      background: #ff5fa2;
-      border: none;
-      color: white;
-      padding: 10px 22px;
-      border-radius: 25px;
-      font-size: 15px;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-
-    button:hover {
-      background: #ff3f8b;
-    }
-
-    input {
-      padding: 10px;
-      border-radius: 10px;
-      border: none;
-      width: 80%;
-      margin-bottom: 10px;
-      text-align: center;
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-  </style>
+.counter {
+    margin-top: 15px;
+    font-size: 14px;
+    color: #ffd1e6;
+}
+</style>
 </head>
+
 <body>
 
-<audio id="music" src="music.mp3" loop></audio>
+<div class="card">
+    <h1>NAOMI & SAM</h1>
 
-<div class="overlay" id="passwordBox">
-  <h2>💖 Private Space</h2>
-  <p>Enter the password</p>
-  <input type="password" id="passwordInput" placeholder="••••">
-  <br>
-  <button onclick="checkPassword()">Enter</button>
-</div>
+    <p>We have been together since</p>
+    <p><strong>22 / 6 / 2025</strong> 💕</p>
 
-<div class="overlay hidden" id="contentBox">
-  <h2>NAOMI & SAM</h2>
-  <div id="step"></div>
-  <button onclick="nextStep()">Next ❤️</button>
+    <div class="counter" id="counter"></div>
+
+    <button onclick="next()">Next ❤️</button>
 </div>
 
 <script>
-  const steps = [
-    { text: "Happy Valentine’s Day to my princess ❤️" },
-    { text: "Being with you has taught me what love really means." },
-    { img: "img1.jpg" },
-    { text: "Thank you for every smile, every moment, every heartbeat." },
-    { img: "img2.jpg" },
-    { img: "img3.jpg" },
-    { text: "You are my calm in a world full of chaos." },
-    { img: "img4.jpg" },
-    { img: "img5.jpg" },
-    { img: "img6.jpg" },
-    { text: "We have been together since 22 / 6 / 2025 💕" },
-    { text: "<strong>I love you. Always.</strong>" }
-  ];
+const startDate = new Date("2025-06-22T00:00:00");
 
-  let index = 0;
+function updateCounter() {
+    const now = new Date();
+    let diff = Math.floor((now - startDate) / 1000);
 
-  function checkPassword() {
-    const pass = document.getElementById("passwordInput").value;
-    if (pass === "2004") {
-      document.getElementById("passwordBox").classList.add("hidden");
-      document.getElementById("contentBox").classList.remove("hidden");
-      document.getElementById("music").play();
-      nextStep();
-    } else {
-      alert("Wrong password 💔");
-    }
-  }
+    const days = Math.floor(diff / (3600 * 24));
+    diff %= 3600 * 24;
+    const hours = Math.floor(diff / 3600);
+    diff %= 3600;
+    const minutes = Math.floor(diff / 60);
+    const seconds = diff % 60;
 
-  function nextStep() {
-    const box = document.getElementById("step");
-    if (index >= steps.length) return;
+    document.getElementById("counter").innerHTML =
+        `We have been together for <br>
+        ${days} days ${hours} hours ${minutes} minutes ${seconds} seconds ❤️`;
+}
 
-    box.innerHTML = "";
-    const item = steps[index];
+setInterval(updateCounter, 1000);
+updateCounter();
 
-    if (item.text) {
-      const p = document.createElement("p");
-      p.innerHTML = item.text;
-      box.appendChild(p);
-    }
-
-    if (item.img) {
-      const img = document.createElement("img");
-      img.src = item.img;
-      box.appendChild(img);
-    }
-
-    index++;
-  }
+function next() {
+    alert("This is only the beginning ❤️");
+}
 </script>
 
 </body>
