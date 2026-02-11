@@ -10,156 +10,203 @@
   margin:0;
   padding:0;
   box-sizing:border-box;
-  font-family: Arial, sans-serif;
+  font-family: 'Segoe UI', sans-serif;
 }
 
 body{
-  min-height:100vh;
-  background:url("bg.jpg") no-repeat center center/cover;
+  height:100vh;
+  background:url("bg.jpg") center/cover no-repeat fixed;
+  overflow:hidden;
+}
+
+/* overlay */
+.overlay{
+  position:fixed;
+  top:0;left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.55);
   display:flex;
   align-items:center;
   justify-content:center;
-  color:white;
 }
 
+/* card */
 .card{
   background:rgba(0,0,0,0.55);
+  backdrop-filter:blur(10px);
+  border-radius:22px;
   padding:25px;
-  border-radius:20px;
   width:90%;
-  max-width:380px;
+  max-width:360px;
+  color:white;
   text-align:center;
-  backdrop-filter: blur(6px);
+  animation:fade 1.2s ease;
+}
+
+@keyframes fade{
+  from{opacity:0;transform:translateY(20px)}
+  to{opacity:1;transform:translateY(0)}
 }
 
 h1{
+  font-size:26px;
   margin-bottom:10px;
 }
 
 p{
   font-size:16px;
-  margin:15px 0;
-  min-height:60px;
+  margin-bottom:15px;
 }
 
 button{
   background:#ff5c8a;
-  color:white;
   border:none;
-  padding:12px 25px;
-  border-radius:30px;
+  padding:12px 30px;
+  border-radius:25px;
+  color:white;
   font-size:16px;
   cursor:pointer;
 }
 
-button:active{
-  transform:scale(0.95);
+button:hover{
+  opacity:.9;
 }
 
-img{
+/* password */
+#passwordScreen input{
   width:100%;
-  border-radius:15px;
-  display:none;
-  margin-top:15px;
+  padding:10px;
+  border-radius:20px;
+  border:none;
+  margin-top:10px;
+  text-align:center;
+  font-size:16px;
 }
 
-.counter{
-  margin-top:15px;
+/* slider */
+#slider img{
+  width:100%;
+  border-radius:18px;
+  display:none;
+}
+
+#slider img.active{
+  display:block;
+}
+
+/* counter */
+#counter{
   font-size:15px;
+  margin-top:10px;
+  color:#ffd1dc;
 }
 </style>
 </head>
 
 <body>
 
-<div class="card">
-  <h1>NAOMI & SAM ❤️</h1>
+<!-- MUSIC -->
+<audio id="music" src="music.mp3"></audio>
 
-  <p id="text"></p>
+<!-- PASSWORD -->
+<div class="overlay" id="passwordScreen">
+  <div class="card">
+    <h1>🔒 Secret Page</h1>
+    <p>Enter the password</p>
+    <input type="password" id="passInput" placeholder="Password">
+    <br><br>
+    <button onclick="checkPass()">Enter ❤️</button>
+    <p id="passError" style="display:none;color:#ff9aa2;margin-top:10px;">Wrong password 💔</p>
+  </div>
+</div>
 
-  <img id="photo" src="img1.jpg">
+<!-- MAIN -->
+<div class="overlay" id="main" style="display:none;">
+  <div class="card">
 
-  <div class="counter" id="counter"></div>
+    <h1>NAOMI & SAM ❤️</h1>
 
-  <button id="nextBtn">Next ❤️</button>
+    <p id="text"></p>
 
-  <audio id="music" src="music.mp3"></audio>
+    <div id="slider">
+      <img src="img1.jpg" class="active">
+      <img src="img2.jpg">
+      <img src="img3.jpg">
+      <img src="img4.jpg">
+      <img src="img5.jpg">
+      <img src="img6.jpg">
+    </div>
+
+    <div id="counter"></div>
+
+    <br>
+    <button onclick="nextStep()">Next 💕</button>
+  </div>
 </div>
 
 <script>
-const texts = [
+/* PASSWORD */
+function checkPass(){
+  const pass="naomi"; // ← غير كلمة السر هنا
+  if(document.getElementById("passInput").value===pass){
+    document.getElementById("passwordScreen").style.display="none";
+    document.getElementById("main").style.display="flex";
+    document.getElementById("music").play();
+    typeText();
+  }else{
+    document.getElementById("passError").style.display="block";
+  }
+}
+
+/* TYPE TEXT */
+const messages=[
   "Happy Valentine’s Day to my princess ❤️",
-  "In a world full of chaos, you are my calm.",
-  "Every moment with you feels like home.",
-  "You are not just my love, you are my safe place.",
-  "This is our story… and it’s only the beginning 💕"
+  "Every moment with you is my favorite moment 💖",
+  "You are my calm in this crazy world 🌸",
+  "Forever thankful for you 💞"
 ];
+let msgIndex=0, charIndex=0;
 
-const images = [
-  "img1.jpg",
-  "img2.jpg",
-  "img3.jpg",
-  "img4.jpg",
-  "img5.jpg",
-  "img6.jpg"
-];
+function typeText(){
+  if(charIndex < messages[msgIndex].length){
+    document.getElementById("text").innerHTML += messages[msgIndex].charAt(charIndex);
+    charIndex++;
+    setTimeout(typeText,50);
+  }
+}
 
-let index = 0;
-let musicStarted = false;
+/* SLIDER + STEPS */
+let step=0;
+function nextStep(){
+  const imgs=document.querySelectorAll("#slider img");
 
-const textEl = document.getElementById("text");
-const imgEl = document.getElementById("photo");
-const btn = document.getElementById("nextBtn");
-const music = document.getElementById("music");
-const counterEl = document.getElementById("counter");
-
-textEl.innerText = texts[0];
-
-btn.onclick = () => {
-
-  if(!musicStarted){
-    music.play();
-    musicStarted = true;
+  if(step < imgs.length-1){
+    imgs[step].classList.remove("active");
+    step++;
+    imgs[step].classList.add("active");
   }
 
-  index++;
-
-  if(index < texts.length){
-    textEl.innerText = texts[index];
-  }
-
-  if(index-1 < images.length){
-    imgEl.src = images[index-1];
-    imgEl.style.display = "block";
-  }
-
-  if(index === texts.length){
-    btn.style.display = "none";
+  if(msgIndex < messages.length-1){
+    msgIndex++;
+    charIndex=0;
+    document.getElementById("text").innerHTML="";
+    typeText();
+  }else{
     showCounter();
   }
-};
+}
 
+/* COUNTER */
 function showCounter(){
-  function update(){
-    const startDate = new Date("2025-06-22T00:00:00");
-    const now = new Date();
-    const diff = now - startDate;
-
-    const days = Math.floor(diff / (1000*60*60*24));
-    const hours = Math.floor((diff / (1000*60*60)) % 24);
-    const minutes = Math.floor((diff / (1000*60)) % 60);
-    const seconds = Math.floor((diff / 1000) % 60);
-
-    counterEl.innerHTML =
-      `We have been together for<br>
-       <b>${days}</b> days 
-       <b>${hours}</b> hours 
-       <b>${minutes}</b> minutes 
-       <b>${seconds}</b> seconds 💖`;
-  }
-
-  update();
-  setInterval(update,1000);
+  const start=new Date("2025-06-22");
+  setInterval(()=>{
+    const now=new Date();
+    const diff=now-start;
+    const days=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("counter").innerHTML=
+      `We have been together for <b>${days}</b> days 💘`;
+  },1000);
 }
 </script>
 
