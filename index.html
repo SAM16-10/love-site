@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>NAOMI & SAM</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: url('bg.jpg') center/cover no-repeat fixed;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+    }
+
+    .overlay {
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(4px);
+      padding: 20px;
+      width: 90%;
+      max-width: 420px;
+      border-radius: 18px;
+      text-align: center;
+      animation: fadeIn 1s ease;
+    }
+
+    h2 {
+      margin-top: 0;
+      font-weight: 600;
+    }
+
+    p {
+      line-height: 1.6;
+      font-size: 15px;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 14px;
+      margin: 12px 0;
+    }
+
+    button {
+      background: #ff5fa2;
+      border: none;
+      color: white;
+      padding: 10px 22px;
+      border-radius: 25px;
+      font-size: 15px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background: #ff3f8b;
+    }
+
+    input {
+      padding: 10px;
+      border-radius: 10px;
+      border: none;
+      width: 80%;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+<audio id="music" src="music.mp3" loop></audio>
+
+<div class="overlay" id="passwordBox">
+  <h2>💖 Private Space</h2>
+  <p>Enter the password</p>
+  <input type="password" id="passwordInput" placeholder="••••">
+  <br>
+  <button onclick="checkPassword()">Enter</button>
+</div>
+
+<div class="overlay hidden" id="contentBox">
+  <h2>NAOMI & SAM</h2>
+  <div id="step"></div>
+  <button onclick="nextStep()">Next ❤️</button>
+</div>
+
+<script>
+  const steps = [
+    { text: "Happy Valentine’s Day to my princess ❤️" },
+    { text: "Being with you has taught me what love really means." },
+    { img: "img1.jpg" },
+    { text: "Thank you for every smile, every moment, every heartbeat." },
+    { img: "img2.jpg" },
+    { img: "img3.jpg" },
+    { text: "You are my calm in a world full of chaos." },
+    { img: "img4.jpg" },
+    { img: "img5.jpg" },
+    { img: "img6.jpg" },
+    { text: "We have been together since 22 / 6 / 2025 💕" },
+    { text: "<strong>I love you. Always.</strong>" }
+  ];
+
+  let index = 0;
+
+  function checkPassword() {
+    const pass = document.getElementById("passwordInput").value;
+    if (pass === "2004") {
+      document.getElementById("passwordBox").classList.add("hidden");
+      document.getElementById("contentBox").classList.remove("hidden");
+      document.getElementById("music").play();
+      nextStep();
+    } else {
+      alert("Wrong password 💔");
+    }
+  }
+
+  function nextStep() {
+    const box = document.getElementById("step");
+    if (index >= steps.length) return;
+
+    box.innerHTML = "";
+    const item = steps[index];
+
+    if (item.text) {
+      const p = document.createElement("p");
+      p.innerHTML = item.text;
+      box.appendChild(p);
+    }
+
+    if (item.img) {
+      const img = document.createElement("img");
+      img.src = item.img;
+      box.appendChild(img);
+    }
+
+    index++;
+  }
+</script>
+
+</body>
+</html>
