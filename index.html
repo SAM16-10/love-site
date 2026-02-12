@@ -3,214 +3,129 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NAOMI & SAM ❤️</title>
+<title>NAOMI & SAM 💖</title>
 
 <style>
 *{
-  margin:0;
-  padding:0;
   box-sizing:border-box;
-  font-family: 'Segoe UI', sans-serif;
+  font-family: Arial, sans-serif;
 }
-
 body{
-  height:100vh;
+  margin:0;
+  min-height:100vh;
   background:url("bg.jpg") center/cover no-repeat fixed;
-  overflow:hidden;
-}
-
-/* overlay */
-.overlay{
-  position:fixed;
-  top:0;left:0;
-  width:100%;
-  height:100%;
-  background:rgba(0,0,0,0.55);
   display:flex;
-  align-items:center;
   justify-content:center;
-}
-
-/* card */
-.card{
-  background:rgba(0,0,0,0.55);
-  backdrop-filter:blur(10px);
-  border-radius:22px;
-  padding:25px;
-  width:90%;
-  max-width:360px;
+  align-items:center;
   color:white;
+}
+.overlay{
+  background:rgba(0,0,0,0.55);
+  padding:25px;
+  border-radius:20px;
+  width:90%;
+  max-width:380px;
   text-align:center;
-  animation:fade 1.2s ease;
-}
-
-@keyframes fade{
-  from{opacity:0;transform:translateY(20px)}
-  to{opacity:1;transform:translateY(0)}
-}
-
-h1{
-  font-size:26px;
-  margin-bottom:10px;
-}
-
-p{
-  font-size:16px;
-  margin-bottom:15px;
 }
 
 button{
-  background:#ff5c8a;
+  margin-top:15px;
+  padding:12px 25px;
   border:none;
-  padding:12px 30px;
   border-radius:25px;
+  background:#ff5fa2;
   color:white;
   font-size:16px;
   cursor:pointer;
 }
 
-button:hover{
-  opacity:.9;
-}
+.hidden{ display:none; }
 
-/* password */
-#passwordScreen input{
+img{
   width:100%;
-  padding:10px;
-  border-radius:20px;
-  border:none;
+  border-radius:15px;
   margin-top:10px;
-  text-align:center;
-  font-size:16px;
-}
-
-/* slider */
-#slider img{
-  width:100%;
-  border-radius:18px;
-  display:none;
-}
-
-#slider img.active{
-  display:block;
-}
-
-/* counter */
-#counter{
-  font-size:15px;
-  margin-top:10px;
-  color:#ffd1dc;
 }
 </style>
 </head>
 
 <body>
 
-<!-- MUSIC -->
-<audio id="music" src="music.mp3"></audio>
-
 <!-- PASSWORD -->
 <div class="overlay" id="passwordScreen">
-  <div class="card">
-    <h1>🔒 Secret Page</h1>
-    <p>Enter the password</p>
-    <input type="password" id="passInput" placeholder="Password">
-    <br><br>
-    <button onclick="checkPass()">Enter ❤️</button>
-    <p id="passError" style="display:none;color:#ff9aa2;margin-top:10px;">Wrong password 💔</p>
-  </div>
+  <h2>🔒 Secret Page</h2>
+  <p>Enter the password</p>
+  <input type="password" id="passInput" placeholder="Password"
+   style="width:100%;padding:10px;border-radius:20px;border:none;">
+  <button onclick="checkPass()">Enter 💗</button>
+  <p id="error" style="color:#ff9aa2;display:none;">Wrong password 💔</p>
 </div>
 
-<!-- MAIN -->
-<div class="overlay" id="main" style="display:none;">
-  <div class="card">
-
-    <h1>NAOMI & SAM ❤️</h1>
-
-    <p id="text"></p>
-
-    <div id="slider">
-      <img src="img1.jpg" class="active">
-      <img src="img2.jpg">
-      <img src="img3.jpg">
-      <img src="img4.jpg">
-      <img src="img5.jpg">
-      <img src="img6.jpg">
-    </div>
-
-    <div id="counter"></div>
-
-    <br>
-    <button onclick="nextStep()">Next 💕</button>
-  </div>
+<!-- INTRO -->
+<div class="overlay hidden" id="intro">
+  <h2>NAOMI & SAM 💖</h2>
+  <p>
+    Happy Valentine’s Day to my princess ❤️  
+    Every moment with you is my favorite moment.
+  </p>
+  <button onclick="showGallery()">Next 💗</button>
 </div>
+
+<!-- GALLERY -->
+<div class="overlay hidden" id="gallery">
+  <img id="galleryImg" src="img1.jpg">
+  <button onclick="nextImg()">Next 💗</button>
+</div>
+
+<!-- END -->
+<div class="overlay hidden" id="end">
+  <h2>Forever Us 💞</h2>
+  <p id="counter"></p>
+</div>
+
+<audio id="music" src="music.mp3"></audio>
 
 <script>
-/* PASSWORD */
+const PASSWORD = "2004";
+let index = 1;
+
 function checkPass(){
-  const pass="2004"; // ← غير كلمة السر هنا
-  if(document.getElementById("passInput").value===pass){
-    document.getElementById("passwordScreen").style.display="none";
-    document.getElementById("main").style.display="flex";
+  if(document.getElementById("passInput").value === PASSWORD){
+    document.getElementById("passwordScreen").classList.add("hidden");
+    document.getElementById("intro").classList.remove("hidden");
     document.getElementById("music").play();
-    typeText();
   }else{
-    document.getElementById("passError").style.display="block";
+    document.getElementById("error").style.display="block";
   }
 }
 
-/* TYPE TEXT */
-const messages=[
-  "Happy Valentine’s Day to my princess ❤️",
-  "Every moment with you is my favorite moment 💖",
-  "You are my calm in this crazy world 🌸",
-  "Forever thankful for you 💞"
-];
-let msgIndex=0, charIndex=0;
-
-function typeText(){
-  if(charIndex < messages[msgIndex].length){
-    document.getElementById("text").innerHTML += messages[msgIndex].charAt(charIndex);
-    charIndex++;
-    setTimeout(typeText,50);
-  }
+function showGallery(){
+  document.getElementById("intro").classList.add("hidden");
+  document.getElementById("gallery").classList.remove("hidden");
 }
 
-/* SLIDER + STEPS */
-let step=0;
-function nextStep(){
-  const imgs=document.querySelectorAll("#slider img");
-
-  if(step < imgs.length-1){
-    imgs[step].classList.remove("active");
-    step++;
-    imgs[step].classList.add("active");
-  }
-
-  if(msgIndex < messages.length-1){
-    msgIndex++;
-    charIndex=0;
-    document.getElementById("text").innerHTML="";
-    typeText();
+function nextImg(){
+  index++;
+  if(index <= 6){
+    document.getElementById("galleryImg").src = "img"+index+".jpg";
   }else{
-    showCounter();
+    document.getElementById("gallery").classList.add("hidden");
+    document.getElementById("end").classList.remove("hidden");
+    startCounter();
   }
 }
 
-/* COUNTER */
-function showCounter(){
-  const start=new Date("2025-06-22");
+function startCounter(){
+  const startDate = new Date("2025-06-22");
   setInterval(()=>{
-    const now=new Date();
-    const diff=now-start;
-    const days=Math.floor(diff/(1000*60*60*24));
-    document.getElementById("counter").innerHTML=
-      `We have been together for <b>${days}</b> days 💘`;
+    const now = new Date();
+    const diff = now - startDate;
+    const days = Math.floor(diff / (1000*60*60*24));
+    document.getElementById("counter").innerText =
+      "We have been together for " + days + " days 💖";
   },1000);
 }
 </script>
 
 </body>
 </html>
-
-
