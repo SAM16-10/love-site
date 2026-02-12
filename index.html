@@ -46,6 +46,10 @@ img{
   border-radius:15px;
   margin-top:10px;
 }
+
+#typeText{
+  min-height:80px;
+}
 </style>
 </head>
 
@@ -64,17 +68,13 @@ img{
 <!-- INTRO -->
 <div class="overlay hidden" id="intro">
   <h2>NAOMI & SAM 💖</h2>
-  <p>
-    Happy Valentine’s Day to my princess.  
-    Being with you has taught me what love really means.  
-    Thank you for <span id="daysIntro"></span> unforgettable days  
-    and for being everything my heart didn’t know it needed ❤️
-  </p>
+  <p id="typeText"></p>
   <button onclick="showGallery()">Next 💗</button>
 </div>
 
 <!-- GALLERY -->
 <div class="overlay hidden" id="gallery">
+  <p id="imgText"></p>
   <img id="galleryImg" src="img1.jpg">
   <button onclick="nextImg()">Next 💗</button>
 </div>
@@ -86,42 +86,59 @@ img{
     This is just the beginning of more adventures, emotions,  
     and love together every day and forever 💖
   </p>
-  <p id="counter" style="margin-top:10px;"></p>
+  <p id="counter"></p>
 </div>
 
 <audio id="music" src="music.mp3"></audio>
 
 <script>
 const PASSWORD = "2004";
-let index = 1;
-const startDate = new Date("2025-06-22");
 
-function getDaysTogether(){
-  const now = new Date();
-  const diff = now - startDate;
-  return Math.floor(diff / (1000*60*60*24));
-}
+const introMessage =
+"Happy Valentine’s Day to my princess. Being with you has taught me what love really means. Thank you for 237 unforgettable days and for being everything my heart didn’t know it needed.";
+
+const imgMessages = [
+  "You are my favorite picture in every memory 💗",
+  "With you, even silence feels warm 💞",
+  "Every smile of yours stays with me ✨",
+  "My heart chose you, every time 💖",
+  "You are my calm in the chaos 🌙",
+  "Always you. Only you. Forever ❤️"
+];
+
+let index = 1;
+let typeIndex = 0;
 
 function checkPass(){
   if(document.getElementById("passInput").value === PASSWORD){
     document.getElementById("passwordScreen").classList.add("hidden");
     document.getElementById("intro").classList.remove("hidden");
     document.getElementById("music").play();
-    document.getElementById("daysIntro").innerText = getDaysTogether();
+    typeIntro();
   }else{
     document.getElementById("error").style.display="block";
+  }
+}
+
+function typeIntro(){
+  if(typeIndex < introMessage.length){
+    document.getElementById("typeText").innerHTML += introMessage.charAt(typeIndex);
+    typeIndex++;
+    setTimeout(typeIntro, 40);
   }
 }
 
 function showGallery(){
   document.getElementById("intro").classList.add("hidden");
   document.getElementById("gallery").classList.remove("hidden");
+  document.getElementById("imgText").innerText = imgMessages[0];
 }
 
 function nextImg(){
   index++;
   if(index <= 6){
     document.getElementById("galleryImg").src = "img"+index+".jpg";
+    document.getElementById("imgText").innerText = imgMessages[index-1];
   }else{
     document.getElementById("gallery").classList.add("hidden");
     document.getElementById("end").classList.remove("hidden");
@@ -130,9 +147,20 @@ function nextImg(){
 }
 
 function startCounter(){
+  const startDate = new Date("2025-06-22T00:00:00");
   setInterval(()=>{
+    const now = new Date();
+    let diff = now - startDate;
+
+    const days = Math.floor(diff / (1000*60*60*24));
+    diff %= (1000*60*60*24);
+    const hours = Math.floor(diff / (1000*60*60));
+    diff %= (1000*60*60);
+    const minutes = Math.floor(diff / (1000*60));
+    const seconds = Math.floor(diff / 1000);
+
     document.getElementById("counter").innerText =
-      "We have been together for " + getDaysTogether() + " days 💖";
+      `${days} days, ${hours} hours, ${minutes} minutes, ${seconds} seconds 💖`;
   },1000);
 }
 </script>
