@@ -20,7 +20,7 @@ body{
   color:white;
 }
 .overlay{
-  background:rgba(0,0,0,0.55);
+  background:rgba(0,0,0,0.6);
   padding:25px;
   border-radius:20px;
   width:90%;
@@ -65,8 +65,10 @@ img{
 <div class="overlay hidden" id="intro">
   <h2>NAOMI & SAM 💖</h2>
   <p>
-    Happy Valentine’s Day to my princess ❤️  
-    Every moment with you is my favorite moment.
+    Happy Valentine’s Day to my princess.  
+    Being with you has taught me what love really means.  
+    Thank you for <span id="daysIntro"></span> unforgettable days  
+    and for being everything my heart didn’t know it needed ❤️
   </p>
   <button onclick="showGallery()">Next 💗</button>
 </div>
@@ -80,7 +82,11 @@ img{
 <!-- END -->
 <div class="overlay hidden" id="end">
   <h2>Forever Us 💞</h2>
-  <p id="counter"></p>
+  <p>
+    This is just the beginning of more adventures, emotions,  
+    and love together every day and forever 💖
+  </p>
+  <p id="counter" style="margin-top:10px;"></p>
 </div>
 
 <audio id="music" src="music.mp3"></audio>
@@ -88,12 +94,20 @@ img{
 <script>
 const PASSWORD = "2004";
 let index = 1;
+const startDate = new Date("2025-06-22");
+
+function getDaysTogether(){
+  const now = new Date();
+  const diff = now - startDate;
+  return Math.floor(diff / (1000*60*60*24));
+}
 
 function checkPass(){
   if(document.getElementById("passInput").value === PASSWORD){
     document.getElementById("passwordScreen").classList.add("hidden");
     document.getElementById("intro").classList.remove("hidden");
     document.getElementById("music").play();
+    document.getElementById("daysIntro").innerText = getDaysTogether();
   }else{
     document.getElementById("error").style.display="block";
   }
@@ -116,13 +130,9 @@ function nextImg(){
 }
 
 function startCounter(){
-  const startDate = new Date("2025-06-22");
   setInterval(()=>{
-    const now = new Date();
-    const diff = now - startDate;
-    const days = Math.floor(diff / (1000*60*60*24));
     document.getElementById("counter").innerText =
-      "We have been together for " + days + " days 💖";
+      "We have been together for " + getDaysTogether() + " days 💖";
   },1000);
 }
 </script>
