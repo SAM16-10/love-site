@@ -106,7 +106,13 @@ const imgMessages = [
   "Always you. Only you. Forever ❤️"
 ];
 
-let index = 1;
+let index = 1; 
+  // PRELOAD IMAGES
+for(let i = 1; i <= 6; i++){
+  const img = new Image();
+  img.src = "img" + i + ".jpg";
+}
+
 let typeIndex = 0;
 
 function checkPass(){
@@ -167,3 +173,4 @@ function startCounter(){
 
 </body>
 </html>
+
