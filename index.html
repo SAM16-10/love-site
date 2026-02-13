@@ -27,7 +27,6 @@ body{
   max-width:380px;
   text-align:center;
 }
-
 button{
   margin-top:15px;
   padding:12px 25px;
@@ -38,18 +37,14 @@ button{
   font-size:16px;
   cursor:pointer;
 }
-
 .hidden{ display:none; }
-
 img{
   width:100%;
   border-radius:15px;
   margin-top:10px;
 }
-
-#typeText{
-  min-height:80px;
-}
+#typeText{ min-height:80px; }
+#imgText{ min-height:50px; }
 </style>
 </head>
 
@@ -59,7 +54,7 @@ img{
 <div class="overlay" id="passwordScreen">
   <h2>🔒 Secret Page</h2>
   <p>Enter the password</p>
-  <input type="password" id="passInput" placeholder="Password"
+  <input type="password" id="passInput"
    style="width:100%;padding:10px;border-radius:20px;border:none;">
   <button onclick="checkPass()">Enter 💗</button>
   <p id="error" style="color:#ff9aa2;display:none;">Wrong password 💔</p>
@@ -83,7 +78,7 @@ img{
 <div class="overlay hidden" id="end">
   <h2>Forever Us 💞</h2>
   <p>
-    This is just the beginning of more adventures, emotions,  
+    This is just the beginning of more adventures, emotions,
     and love together every day and forever 💖
   </p>
   <p id="counter"></p>
@@ -92,7 +87,7 @@ img{
 <audio id="music" src="music.mp3"></audio>
 
 <script>
-const PASSWORD = "2004";
+const PASSWORD = "3016";
 
 const introMessage =
 "Happy Valentine’s Day to my princess. Being with you has taught me what love really means. Thank you for 237 unforgettable days and for being everything my heart didn’t know it needed.";
@@ -106,15 +101,17 @@ const imgMessages = [
   "Always you. Only you. Forever ❤️"
 ];
 
-let index = 1; 
-  // PRELOAD IMAGES
+let index = 1;
+let typeIndex = 0;
+let typingInterval = null;
+
+/* PRELOAD IMAGES */
 for(let i = 1; i <= 6; i++){
   const img = new Image();
   img.src = "img" + i + ".jpg";
 }
 
-let typeIndex = 0;
-
+/* PASSWORD */
 function checkPass(){
   if(document.getElementById("passInput").value === PASSWORD){
     document.getElementById("passwordScreen").classList.add("hidden");
@@ -126,27 +123,46 @@ function checkPass(){
   }
 }
 
+/* INTRO TYPING */
 function typeIntro(){
   if(typeIndex < introMessage.length){
     document.getElementById("typeText").innerHTML += introMessage.charAt(typeIndex);
     typeIndex++;
-    setTimeout(typeIntro, 40);
+    setTimeout(typeIntro, 35);
   }
 }
 
+/* OPEN GALLERY */
 function showGallery(){
   document.getElementById("intro").classList.add("hidden");
   document.getElementById("gallery").classList.remove("hidden");
-  document.getElementById("imgText").innerText = imgMessages[0];
+  typeText(); // أول صورة تتحرك
 }
 
+/* TYPING TEXT ON IMAGES */
+function typeText(){
+  const el = document.getElementById("imgText");
+  const text = imgMessages[index-1];
+
+  if(typingInterval) clearInterval(typingInterval);
+  el.innerHTML = "";
+  let i = 0;
+
+  typingInterval = setInterval(()=>{
+    el.innerHTML += text.charAt(i);
+    i++;
+    if(i >= text.length) clearInterval(typingInterval);
+  }, 25);
+}
+
+/* NEXT IMAGE */
 function nextImg(){
   index++;
 
   if(index <= 6){
     const img = document.getElementById("galleryImg");
     img.src = "img" + index + ".jpg";
-    typeText(); // ← السطر السحري
+    typeText();
   }else{
     document.getElementById("gallery").classList.add("hidden");
     document.getElementById("end").classList.remove("hidden");
@@ -154,8 +170,10 @@ function nextImg(){
   }
 }
 
+/* COUNTER */
 function startCounter(){
   const startDate = new Date("2025-06-22T00:00:00");
+
   setInterval(()=>{
     const now = new Date();
     let diff = now - startDate;
@@ -175,6 +193,3 @@ function startCounter(){
 
 </body>
 </html>
-
-
-
